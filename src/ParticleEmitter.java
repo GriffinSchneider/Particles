@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 
 
@@ -27,6 +28,10 @@ public class ParticleEmitter {
 	/** The minimum possible rotational velocity (in radians per frame) of each particle created 
 	 * by this emitter .*/
 	public float minParticleRotationalVelocity = 0f;
+	public float maxParticleScale = 1.0f;
+	public float minParticleScale = 1.0f;
+	/** Acceleration per frame of particles created by this emitter */
+	public PVector particleAcceleration = new PVector(0f, 0f, 0f);
 	
 	/** Whether to fade out particles so that their alpha = 0 at the end of their lifespan */
 	public boolean fadeOut = false;
@@ -38,6 +43,7 @@ public class ParticleEmitter {
 	private PApplet parent;
 	private int lifespan;
 	private int lifeCount;
+	private PImage texture;
 	
 	private ParticleEmitter parentEmitter;
 	
@@ -49,14 +55,17 @@ public class ParticleEmitter {
 	}
 	
 	public ParticleEmitter(PVector pos, PApplet parent, int lifespan) {
-		this(pos, parent, lifespan, null);
+		this(pos, parent, lifespan, null, null);
 	}
 		
-	public ParticleEmitter(PVector pos, PApplet parent, int lifespan, ParticleEmitter parentEmitter) {
+	public ParticleEmitter(PVector pos, PApplet parent, int lifespan, ParticleEmitter parentEmitter, String filename) {
 		this.pos = pos;
 		this.parent = parent;
 		this.lifespan = lifespan;
 		this.parentEmitter = parentEmitter;
+		if (filename != null) {
+			this.texture = parent.loadImage(filename);
+		}
 	}
 	
 	public void draw() {	
@@ -78,6 +87,8 @@ public class ParticleEmitter {
 		}
 		
 		parent.pushMatrix();
+		// Translate based on the emitter's location - particle
+		// locations are relative to the emitter.
 		parent.translate(this.pos.x, this.pos.y, this.pos.z);
 		
 		drawParticles();
@@ -101,22 +112,19 @@ public class ParticleEmitter {
 	private void emit() {
 		if (this.inhibitEmissions) return;
 		for (int i = 0; i < particlesPerEmission; i++) {
-			// Lifespan
 			int lifespan = (int) randInRange(maxParticleLifespan, minParticleLifespan);
 			Particle p = new Particle(this, new PVector(0, 0, 0), this.parent, lifespan);
 			
-			// Velocity
 			float xVel = randInRange(maxVelocity.x, minVelocity.x);
 			float yVel = randInRange(maxVelocity.y, minVelocity.y);
 			float zVel = randInRange(maxVelocity.z, minVelocity.z);
 			p.velocity = new PVector(xVel, yVel, zVel);
 			
-			// Rotational Velocity
 			p.rotationalVelocity = randInRange(maxParticleRotationalVelocity, minParticleRotationalVelocity);
-			
-			// Color
+			p.scale = randInRange(maxParticleScale, minParticleScale);
+			p.acceleration = this.particleAcceleration;
 			p.color = new Color((int) (Math.random()*Math.pow(2, 24)));
-			
+			p.texture = texture;
 			p.fadeOut = fadeOut;
 			this.particles.add(p);
 		}

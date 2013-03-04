@@ -1,6 +1,7 @@
 import java.awt.Color;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 
 
@@ -12,6 +13,8 @@ public class Particle {
 	public float rotation;
 	public Color color;
 	public boolean fadeOut = false;
+	public float scale = 1.0f;
+	public PImage texture;
 	
 	private ParticleEmitter emitter;
 	private PVector pos;
@@ -47,9 +50,21 @@ public class Particle {
 		parent.pushMatrix();
 		
 		parent.fill(color.getRGB());
+		// The particle's position is relative to its emitter, and the matrix has
+		// already been pre-translated by the emitter to account for its position.
 		parent.translate(pos.x, pos.y, pos.z);
 		parent.rotate(this.rotation);
-		parent.rect(-10, -10, 20, 20);
+		parent.scale(scale);
+		
+		if (texture == null) {
+			parent.rect(-10*scale, -10*scale, 20*scale, 20*scale);
+		} else {
+			parent.image(texture, 
+					     -texture.height*scale*0.5f, 
+					     -texture.height*scale*0.5f, 
+					     texture.height*scale, 
+					     texture.width*scale);
+		}
 		
 		parent.popMatrix();
 	}

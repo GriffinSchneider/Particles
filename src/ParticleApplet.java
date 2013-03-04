@@ -17,13 +17,16 @@ public class ParticleApplet extends PApplet {
 		size(500, 500, P3D);
 		
 		ParticleEmitter p;
-		p = new ParticleEmitter(new PVector(0, 0, 0), this);
+		p = new ParticleEmitter(new PVector(0, -(width/2.0f) + 100, 0), this);
 		p.minParticleRotationalVelocity = -0.2f;
 		p.maxParticleRotationalVelocity = 0.2f;
 		p.maxVelocity = new PVector(5f, 5f, 5f);
-		p.minVelocity = new PVector(-5f, -5f, -5f);
-		p.particlesPerEmission = 2;
+		p.minVelocity = new PVector(-5f, -2f, -5f);
+		p.maxParticleScale = 1.2f;
+		p.minParticleScale = 0.8f;
+		p.particlesPerEmission = 3;
 		p.fadeOut = true;
+		p.particleAcceleration = new PVector(0f, 0.2f, 0f);
 		this.particleEmitters.add(p);
 	}
 
