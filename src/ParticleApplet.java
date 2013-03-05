@@ -26,7 +26,8 @@ public class ParticleApplet extends PApplet {
 		p.minParticleScale = 0.8f;
 		p.particlesPerEmission = 3;
 		p.fadeOut = true;
-		p.particleAcceleration = new PVector(0f, 0.2f, 0f);
+		p.minParticleAcceleration = new PVector(0f, 0f, 0f);
+		p.maxParticleAcceleration = new PVector(0f, 0.2f, 0f);
 		this.particleEmitters.add(p);
 	}
 

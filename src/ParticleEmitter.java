@@ -32,8 +32,10 @@ public class ParticleEmitter {
 	public float maxParticleScale = 1.0f;
     /** The minimum possible scale factor of each particle created by this emitter .*/
 	public float minParticleScale = 1.0f;
-	/** Acceleration per frame of particles created by this emitter */
-	public PVector particleAcceleration = new PVector(0f, 0f, 0f);
+	/** The minimum possible acceleration per frame of particles created by this emitter */
+	public PVector minParticleAcceleration = new PVector(0f, 0f, 0f);
+	/** The maximium possible acceleration per frame of particles created by this emitter */
+	public PVector maxParticleAcceleration = new PVector(0f, 0f, 0f);
 	
 	/** Whether to fade out particles so that their alpha = 0 at the end of their lifespan */
 	public boolean fadeOut = false;
@@ -117,14 +119,19 @@ public class ParticleEmitter {
 			int lifespan = (int) randInRange(maxParticleLifespan, minParticleLifespan);
 			Particle p = new Particle(this, new PVector(0, 0, 0), this.parent, lifespan);
 			
-			float xVel = randInRange(maxVelocity.x, minVelocity.x);
-			float yVel = randInRange(maxVelocity.y, minVelocity.y);
-			float zVel = randInRange(maxVelocity.z, minVelocity.z);
+			float xVel = randInRange(minVelocity.x, maxVelocity.x);
+			float yVel = randInRange(minVelocity.y, maxVelocity.y);
+			float zVel = randInRange(minVelocity.z, maxVelocity.z);
 			p.velocity = new PVector(xVel, yVel, zVel);
 			
-			p.rotationalVelocity = randInRange(maxParticleRotationalVelocity, minParticleRotationalVelocity);
-			p.scale = randInRange(maxParticleScale, minParticleScale);
-			p.acceleration = this.particleAcceleration;
+			float xAcc = randInRange(minParticleAcceleration.x, maxParticleAcceleration.x);
+			float yAcc = randInRange(minParticleAcceleration.y, maxParticleAcceleration.y);
+			float zAcc = randInRange(minParticleAcceleration.z, maxParticleAcceleration.z);
+			p.acceleration = new PVector(xAcc, yAcc, zAcc);
+			
+			p.rotationalVelocity = randInRange(minParticleRotationalVelocity, maxParticleRotationalVelocity);
+			p.scale = randInRange(minParticleScale, maxParticleScale);
+			
 			p.color = new Color((int) (Math.random()*Math.pow(2, 24)));
 			p.texture = texture;
 			p.fadeOut = fadeOut;
@@ -132,7 +139,7 @@ public class ParticleEmitter {
 		}
 	}
 	
-	private float randInRange(float max, float min) {
+	private float randInRange(float min, float max) {
 		return (max - min) * (float)Math.random() + min;
 	}
 	
