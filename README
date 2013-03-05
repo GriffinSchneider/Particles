@@ -1,0 +1,57 @@
+Griffin Schneider
+Assignment #3 - Particle Systems
+
+Description:
+  I wasn't aiming to reproduce any specific effect for this project. Instead, my aim was to create
+a generic/reusable particle system for Processing that can be simply set up to produce a wide
+range of effects. This was something I wanted to use during the 2D project, but I couldn't find
+anything that met my needs. I hope to create a particle engine that I can put to use in the
+3D project.
+  The "ParticleEmitter" and "Particle" classes make up the reusable particle engine. ParticleApplet
+is essentially a test/example harness that instantiates ParticleEmitters in various ways to
+demonstrate their capabilities.
+
+Usage:
+Once the program is running, press a number 0-6 to view examples of various effects created with
+the engine. Each number has a corresponding example, described below.
+
+Example #  Description
+   0        Basic usage - various colored squares, acceleration, rotational velocity, etc.
+   1        Simple example of textured particles
+   2        Textured particles with random tinting
+   3        Multiple particle systems with scripted on/off and gravity
+   4        Stress test - 100 particle emitters, each emitting 3 particles every frame.
+   5        The same stress test, but each particle system is capped at 100 particles.
+   6        3 fire-style particle emitters, except the particle textures are still smily faces.
+
+
+Assignment Requirements:
+  Required Features
+    - Particles that move in varying directions from a point:
+        Yes.
+    - Particles with color that varies over time:
+        Alpha varies over time if the ParticleEmitter's fadeOut variable is true.
+        I did not implement a more generic hue shift over time, although particles can
+        be assigned random hues at creation by setting ParticleEngine's rainbowColors
+        variable to true.
+    - Particles that die after a certain amount of time / maximum number of particles:
+        Both. Particles are assigned a random lifespan between minParticleLifespan and
+        maxParticleLifespan. Also, if maxNumParticles is non-zero, an attempt to create
+        more particles than that number results in particles being removed oldest-first
+        to make room for the new ones.
+    - Physics system:
+        Particles track their linear velocity, linear acceleration, and rotational velocity.
+
+   Optional Features
+     - Textured particles
+        Pass the constructor of ParticleEmitter the filename of an image and that image will
+        be used as a texture for all created particles. The size of the particles can be
+        controlled with maxParticleScale and minParticleScale.
+     - Emitters that turn on/off in a scripted fashion:
+        ParticleEmitter provides an inhibitEmissions variable that causes normal emissions to
+        turn off when it's set to true. This can be used with a few threads to easily create
+        "scripts" - example #3 shows how to to this. Individual emitters can also be assigned a
+        lifespan, after which point they will turn off.
+
+
+Late days: I would like to use 3 late days, assuming that's the right amount to have this graded as not late :)

@@ -11,7 +11,7 @@ public class ParticleEmitter {
 	/** The number of frames between each particle emission. 0 = emit every frame. */
 	public int framesPerEmission = 0;
 	/** The number of particles to create per emission .*/
-	public int particlesPerEmission = 10;
+	public int particlesPerEmission = 1;
 	/** The maximum number of particles. 0 = Infinite. */
 	public int maxNumParticles = 0;
 	/** The maximum possible velocity of each particle created by this emitter .*/
@@ -39,6 +39,8 @@ public class ParticleEmitter {
 	
 	/** Whether to fade out particles so that their alpha = 0 at the end of their lifespan */
 	public boolean fadeOut = false;
+	/** Whether to choose a random color / tint for particles */
+	public boolean rainbowColors = false;
 	
 	/** Usual emissions are ignored if this is true */
 	public boolean inhibitEmissions = false;
@@ -49,8 +51,6 @@ public class ParticleEmitter {
 	private int lifeCount;
 	private PImage texture;
 	
-	private ParticleEmitter parentEmitter;
-	
 	private ArrayList<Particle> particles = new ArrayList<Particle>();
 	private ArrayList<ParticleEmitter> spawnedEmitters = new ArrayList<ParticleEmitter>();
 	
@@ -59,14 +59,17 @@ public class ParticleEmitter {
 	}
 	
 	public ParticleEmitter(PVector pos, PApplet parent, int lifespan) {
-		this(pos, parent, lifespan, null, null);
+		this(pos, parent, null, lifespan);
+	}
+	
+	public ParticleEmitter(PVector pos, PApplet parent, String filename) {
+		this(pos, parent, filename, 0);
 	}
 		
-	public ParticleEmitter(PVector pos, PApplet parent, int lifespan, ParticleEmitter parentEmitter, String filename) {
+	public ParticleEmitter(PVector pos, PApplet parent, String filename, int lifespan) {
 		this.pos = pos;
 		this.parent = parent;
 		this.lifespan = lifespan;
-		this.parentEmitter = parentEmitter;
 		if (filename != null) {
 			this.texture = parent.loadImage(filename);
 		}
@@ -75,9 +78,7 @@ public class ParticleEmitter {
 	public void draw() {	
 		this.lifeCount++;
 		if (lifespan != 0 && this.lifeCount >= lifespan) {
-			if (this.parentEmitter != null) {
-				this.parentEmitter.removeSpawnedEmitter(this);
-			}
+
 			return;
 		}
 		
@@ -132,7 +133,12 @@ public class ParticleEmitter {
 			p.rotationalVelocity = randInRange(minParticleRotationalVelocity, maxParticleRotationalVelocity);
 			p.scale = randInRange(minParticleScale, maxParticleScale);
 			
-			p.color = new Color((int) (Math.random()*Math.pow(2, 24)));
+			if (rainbowColors) {
+				p.color = new Color((int) (Math.random()*Math.pow(2, 24)));
+			} else {
+				p.color = new Color(255, 255, 255, 255);
+			}
+			
 			p.texture = texture;
 			p.fadeOut = fadeOut;
 			this.particles.add(p);

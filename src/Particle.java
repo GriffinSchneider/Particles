@@ -59,6 +59,7 @@ public class Particle {
 		if (texture == null) {
 			parent.rect(-10*scale, -10*scale, 20*scale, 20*scale);
 		} else {
+			parent.tint(this.color.getRGB());
 			parent.image(texture, 
 					     -texture.height*scale*0.5f, 
 					     -texture.height*scale*0.5f, 
