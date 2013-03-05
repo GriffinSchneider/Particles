@@ -28,7 +28,9 @@ public class ParticleEmitter {
 	/** The minimum possible rotational velocity (in radians per frame) of each particle created 
 	 * by this emitter .*/
 	public float minParticleRotationalVelocity = 0f;
+    /** The maximum possible scale factor of each particle created by this emitter .*/
 	public float maxParticleScale = 1.0f;
+    /** The minimum possible scale factor of each particle created by this emitter .*/
 	public float minParticleScale = 1.0f;
 	/** Acceleration per frame of particles created by this emitter */
 	public PVector particleAcceleration = new PVector(0f, 0f, 0f);
